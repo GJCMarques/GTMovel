@@ -102,6 +102,39 @@
         .hamburger span {
             background: #1e293b !important;
         }
+
+        /* Responsive Menu Control - Force correct display */
+        @media (max-width: 1023px) {
+            /* Hide desktop nav on mobile */
+            nav.hidden.lg\:flex {
+                display: none !important;
+            }
+            /* Show hamburger on mobile */
+            .hamburger.lg\:hidden {
+                display: flex !important;
+            }
+            /* Mobile menu elements visible on mobile */
+            .mobile-menu-overlay.lg\:hidden,
+            .mobile-menu-content.lg\:hidden {
+                display: block !important;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            /* Show desktop nav on large screens */
+            nav.hidden.lg\:flex {
+                display: flex !important;
+            }
+            /* Hide hamburger on desktop */
+            .hamburger.lg\:hidden {
+                display: none !important;
+            }
+            /* Hide mobile menu on desktop */
+            .mobile-menu-overlay.lg\:hidden,
+            .mobile-menu-content.lg\:hidden {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 

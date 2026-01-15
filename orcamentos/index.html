@@ -623,14 +623,14 @@
 
                     // Validation
                     if (!name || !email || !productType || !subject || !message) {
-                        alert('Por favor, preencha todos os campos obrigatórios.');
+                        showToast('Por favor, preencha todos os campos obrigatórios.', 'error');
                         return;
                     }
 
                     // Email validation
                     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                     if (!emailRegex.test(email)) {
-                        alert('Por favor, insira um email válido.');
+                        showToast('Por favor, insira um email válido.', 'error');
                         return;
                     }
 
@@ -662,7 +662,7 @@
 
                         if (response.ok && result.success) {
                             // Success
-                            alert('✅ Pedido de orçamento enviado com sucesso!\n\nEntraremos em contacto em breve.');
+                            showToast('✅ Pedido de orçamento enviado com sucesso! Entraremos em contacto em breve.', 'success');
                             form.reset();
                         } else {
                             // Error from server
@@ -670,7 +670,7 @@
                         }
                     } catch (error) {
                         console.error('Erro ao enviar formulário:', error);
-                        alert('❌ Erro ao enviar pedido de orçamento.\n\nPor favor, tente novamente ou contacte-nos diretamente:\n📧 gtmovel@live.com.pt\n📞 +351 227 833 020');
+                        showToast('❌ Erro ao enviar pedido de orçamento. Por favor, tente novamente ou contacte-nos diretamente: gtmovel@live.com.pt', 'error');
                     } finally {
                         // Reset button state
                         submitBtn.disabled = false;
