@@ -243,7 +243,7 @@ export async function onRequestPost(context) {
       },
       body: JSON.stringify({
         from: 'GT Móvel Website <onboarding@resend.dev>', // Alterar para o domínio verificado: noreply@gtmovel.com
-        to: ['gtmovel@live.com.pt'], // Email de destino
+        to: ['guilherme.jcmarques@gmail.com'], // Email de destino
         reply_to: data.email, // Permite responder diretamente ao cliente
         subject: emailSubject,
         html: emailBody,
