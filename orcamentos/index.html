@@ -603,13 +603,14 @@
         });
     </script>
 
-    <!-- Form Handler with mailto: -->
+    <!-- Form Handler with Cloudflare Pages Function -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const form = document.getElementById('budget-form');
+            const submitBtn = form?.querySelector('button[type="submit"]');
 
             if (form) {
-                form.addEventListener('submit', (e) => {
+                form.addEventListener('submit', async (e) => {
                     e.preventDefault();
 
                     // Get form data
@@ -633,28 +634,49 @@
                         return;
                     }
 
-                    // Build email body
-                    let emailBody = `PEDIDO DE ORÇAMENTO - GT MÓVEL\n\n`;
-                    emailBody += `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
-                    emailBody += `DADOS DO CLIENTE:\n`;
-                    emailBody += `Nome: ${name}\n`;
-                    emailBody += `Email: ${email}\n`;
-                    if (phone) emailBody += `Telefone: ${phone}\n`;
-                    emailBody += `\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
-                    emailBody += `DETALHES DO PEDIDO:\n`;
-                    emailBody += `Tipo de Produto: ${productType}\n`;
-                    emailBody += `Assunto: ${subject}\n\n`;
-                    emailBody += `Mensagem:\n${message}\n`;
-                    emailBody += `\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n`;
-                    emailBody += `Enviado via formulário de orçamentos GT Móvel\n`;
-                    emailBody += `www.gtmovel.com`;
+                    // Show loading state
+                    const originalBtnText = submitBtn.textContent;
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'A enviar...';
+                    submitBtn.style.opacity = '0.7';
 
-                    // Build mailto link
-                    const mailtoSubject = `Pedido de Orçamento: ${subject}`;
-                    const mailtoLink = `mailto:gtmovel@live.com.pt?subject=${encodeURIComponent(mailtoSubject)}&body=${encodeURIComponent(emailBody)}`;
+                    try {
+                        // Send to Cloudflare Pages Function
+                        const response = await fetch('/enviar-email', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                nome: name,
+                                email: email,
+                                telefone: phone,
+                                tipoProduto: productType,
+                                assunto: subject,
+                                mensagem: message,
+                                tipo: 'orcamento'
+                            })
+                        });
 
-                    // Open email client
-                    window.location.href = mailtoLink;
+                        const result = await response.json();
+
+                        if (response.ok && result.success) {
+                            // Success
+                            alert('✅ Pedido de orçamento enviado com sucesso!\n\nEntraremos em contacto em breve.');
+                            form.reset();
+                        } else {
+                            // Error from server
+                            throw new Error(result.message || 'Erro ao enviar');
+                        }
+                    } catch (error) {
+                        console.error('Erro ao enviar formulário:', error);
+                        alert('❌ Erro ao enviar pedido de orçamento.\n\nPor favor, tente novamente ou contacte-nos diretamente:\n📧 gtmovel@live.com.pt\n📞 +351 227 833 020');
+                    } finally {
+                        // Reset button state
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = originalBtnText;
+                        submitBtn.style.opacity = '1';
+                    }
                 });
             }
         });

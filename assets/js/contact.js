@@ -11,8 +11,15 @@
 // =================================
 
 // Choose your form submission method:
-// 'emailjs' or 'formsubmit' or 'custom'
-const FORM_METHOD = 'emailjs';
+// 'cloudflare' (RECOMMENDED) - Uses Cloudflare Pages Functions + Resend
+// 'emailjs' - Uses EmailJS service
+// 'formsubmit' - Uses FormSubmit service
+// 'custom' - Custom API endpoint
+const FORM_METHOD = 'cloudflare';
+
+// Cloudflare Pages Function Endpoint (RECOMMENDED)
+// No configuration needed! Just set up RESEND_API_KEY in Cloudflare Dashboard
+const CLOUDFLARE_ENDPOINT = '/enviar-email';
 
 // EmailJS Configuration (https://www.emailjs.com/)
 // Get your credentials from EmailJS dashboard
@@ -96,6 +103,9 @@ async function handleFormSubmit(e) {
 
         // Submit based on chosen method
         switch (FORM_METHOD) {
+            case 'cloudflare':
+                success = await submitViaCloudflare(data);
+                break;
             case 'emailjs':
                 success = await submitViaEmailJS(data);
                 break;
@@ -125,6 +135,39 @@ async function handleFormSubmit(e) {
     } finally {
         // Reset button state
         setLoadingState(submitBtn, btnText, btnIcon, false);
+    }
+}
+
+// =================================
+// Cloudflare Pages Function Submission (RECOMMENDED)
+// =================================
+async function submitViaCloudflare(data) {
+    try {
+        const response = await fetch(CLOUDFLARE_ENDPOINT, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                nome: data.name,
+                email: data.email,
+                telefone: data.phone || '',
+                assunto: data.subject || '',
+                mensagem: data.message,
+                tipo: 'contacto'
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log('Cloudflare Function response:', result);
+        return result.success === true;
+    } catch (error) {
+        console.error('Cloudflare Function error:', error);
+        throw error;
     }
 }
 
