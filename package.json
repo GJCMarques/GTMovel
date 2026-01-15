@@ -1,0 +1,22 @@
+{
+  "name": "gt-movel-website",
+  "version": "1.0.0",
+  "description": "Website oficial da GT Móvel - Móveis e Eletrodomésticos desde 1977",
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler pages deploy . --project-name=gt-movel",
+    "dev": "wrangler pages dev .",
+    "preview": "wrangler pages deploy . --project-name=gt-movel --branch=preview"
+  },
+  "keywords": [
+    "cloudflare-pages",
+    "website",
+    "moveis",
+    "eletrodomesticos"
+  ],
+  "author": "Guilherme Marques",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "wrangler": "^4.59.2"
+  }
+}

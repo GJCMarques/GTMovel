@@ -67,32 +67,70 @@ Para enviar emails de `noreply@gtmovel.com` em vez de `onboarding@resend.dev`:
 
 ### 2.1 Fazer Deploy do Projeto
 
-#### Opção A: Via Dashboard (Recomendado)
+#### ⭐ Opção A: Via GitHub (RECOMENDADO)
+
+Esta é a forma mais fácil e permite deploys automáticos:
+
+1. Fazer push do código para o GitHub:
+   ```bash
+   git add .
+   git commit -m "Initial commit - GT Móvel website"
+   git push origin main
+   ```
+
+2. Ir a [dash.cloudflare.com](https://dash.cloudflare.com/)
+3. Clicar em **"Workers & Pages"**
+4. Clicar em **"Create Application"** > **"Pages"** > **"Connect to Git"**
+5. Autorizar acesso ao GitHub
+6. Selecionar o repositório `GTMovel`
+7. Configurar:
+   - **Project name**: `gt-movel` (ou outro nome)
+   - **Production branch**: `main`
+   - **Framework preset**: `None`
+   - **Build command**: (deixar vazio)
+   - **Build output directory**: `/` (raiz do projeto)
+8. Clicar em **"Save and Deploy"**
+
+✅ Cada novo commit no GitHub fará deploy automático!
+
+---
+
+#### Opção B: Via Wrangler CLI (Linha de Comandos)
+
+Para quem prefere usar a linha de comandos:
+
+```bash
+# 1. Instalar Wrangler globalmente
+npm install -g wrangler
+
+# 2. Fazer login no Cloudflare
+wrangler login
+
+# 3. Deploy do projeto (CORRETO para Pages)
+wrangler pages deploy . --project-name=gt-movel
+
+# OU deploy com nome específico
+wrangler pages deploy . --project-name=gt-movel --branch=main
+```
+
+**⚠️ IMPORTANTE:** Use `wrangler pages deploy` e NÃO `wrangler deploy` (que é para Workers, não Pages)
+
+---
+
+#### Opção C: Via Dashboard - Upload Direto (Sem Git)
+
+Se não quiseres usar Git:
 
 1. Ir a [dash.cloudflare.com](https://dash.cloudflare.com/)
 2. Clicar em **"Workers & Pages"**
-3. Clicar em **"Create Application"** > **"Pages"** > **"Connect to Git"**
-4. Autorizar acesso ao GitHub/GitLab
-5. Selecionar o repositório `GTMovel`
-6. Configurar:
-   - **Project name**: `gt-movel` (ou outro nome)
-   - **Production branch**: `main`
-   - **Build command**: (deixar vazio)
-   - **Build output directory**: `/`
-7. Clicar em **"Save and Deploy"**
+3. Clicar em **"Create Application"** > **"Pages"** > **"Upload assets"**
+4. **Dar nome ao projeto**: `gt-movel`
+5. **Arrastar toda a pasta do projeto** (incluindo `functions/`)
+6. Clicar em **"Deploy site"**
 
-#### Opção B: Via Wrangler CLI
+⚠️ **Nota:** Com esta opção, cada atualização precisa de ser feita manualmente. Recomendo usar Git (Opção A).
 
-```bash
-# Instalar Wrangler
-npm install -g wrangler
-
-# Login no Cloudflare
-wrangler login
-
-# Deploy
-wrangler pages deploy . --project-name=gt-movel
-```
+---
 
 ### 2.2 Aguardar Deploy
 
@@ -101,6 +139,8 @@ O Cloudflare vai fazer o deploy automático. Quando terminar, terás um URL como
 ```
 https://gt-movel.pages.dev
 ```
+
+✅ O site está online! As Pages Functions também estarão disponíveis em `/enviar-email`
 
 ---
 
