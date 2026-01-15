@@ -13,9 +13,13 @@
  */
 
 export async function onRequestPost(context) {
+  // Log para debugging (aparece nos Real-time Logs do Cloudflare)
+  console.log('[enviar-email] Function called at:', new Date().toISOString());
+
   try {
     // Parse do corpo da requisição
     const data = await context.request.json();
+    console.log('[enviar-email] Data received:', { nome: data.nome, email: data.email, tipo: data.tipo });
 
     // Validar dados obrigatórios
     if (!data.nome || !data.email || !data.mensagem) {
@@ -49,8 +53,12 @@ export async function onRequestPost(context) {
     // Obter API Key do ambiente
     const RESEND_API_KEY = context.env.RESEND_API_KEY;
 
+    // Log para debugging
+    console.log('[enviar-email] API Key exists:', !!RESEND_API_KEY);
+    console.log('[enviar-email] API Key length:', RESEND_API_KEY ? RESEND_API_KEY.length : 0);
+
     if (!RESEND_API_KEY) {
-      console.error('RESEND_API_KEY não configurada');
+      console.error('[enviar-email] ERROR: RESEND_API_KEY não configurada');
       return new Response(
         JSON.stringify({
           success: false,
@@ -223,6 +231,9 @@ export async function onRequestPost(context) {
       `;
     }
 
+    // Log antes de enviar
+    console.log('[enviar-email] Sending to Resend API...');
+
     // Enviar email via Resend
     const response = await fetch('https://api.resend.com/emails', {
       method: 'POST',
@@ -241,6 +252,12 @@ export async function onRequestPost(context) {
 
     const responseData = await response.json();
 
+    console.log('[enviar-email] Resend API response:', {
+      status: response.status,
+      ok: response.ok,
+      id: responseData.id
+    });
+
     if (response.ok) {
       return new Response(
         JSON.stringify({
@@ -257,7 +274,11 @@ export async function onRequestPost(context) {
         }
       );
     } else {
-      console.error('Erro ao enviar email via Resend:', responseData);
+      console.error('[enviar-email] ERROR from Resend:', {
+        status: response.status,
+        statusText: response.statusText,
+        data: responseData
+      });
       return new Response(
         JSON.stringify({
           success: false,
@@ -270,7 +291,11 @@ export async function onRequestPost(context) {
       );
     }
   } catch (err) {
-    console.error('Erro na função enviar-email:', err);
+    console.error('[enviar-email] CRITICAL ERROR:', {
+      name: err.name,
+      message: err.message,
+      stack: err.stack
+    });
     return new Response(
       JSON.stringify({
         success: false,
