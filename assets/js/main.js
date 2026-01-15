@@ -39,12 +39,18 @@ function initMobileMenu() {
             mobileMenuOverlay.classList.remove('active');
             mobileMenuContent.classList.remove('active');
             document.body.style.overflow = ''; // Restore scrolling
+            document.body.style.position = '';
+            document.body.style.width = '';
+            document.documentElement.style.overflow = '';
         } else {
             // Open
             menuBtn.classList.add('open');
             mobileMenuOverlay.classList.add('active');
             mobileMenuContent.classList.add('active');
             document.body.style.overflow = 'hidden'; // Lock scrolling
+            document.body.style.position = 'fixed';
+            document.body.style.width = '100%';
+            document.documentElement.style.overflow = 'hidden';
         }
     }
 
@@ -71,6 +77,9 @@ function initMobileMenu() {
             mobileMenuOverlay.classList.remove('active');
             mobileMenuContent.classList.remove('active');
             document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.width = '';
+            document.documentElement.style.overflow = '';
         });
     });
 
@@ -169,82 +178,94 @@ function initScrollToTop() {
 // Hero Swiper Initialization
 // =================================
 function initHeroSwiper() {
-    if (typeof Swiper === 'undefined') {
-        console.warn('Swiper.js não encontrado. Verifique se importou o CDN.');
-        return;
-    }
+    try {
+        // Check if Swiper is defined
+        if (typeof Swiper === 'undefined') {
+            // Swiper not loaded, but don't show warning - it's optional
+            return;
+        }
 
-    const heroContainer = document.querySelector('.hero-swiper');
-    if (!heroContainer) return;
+        const heroContainer = document.querySelector('.hero-swiper');
+        if (!heroContainer) return;
 
-    const heroSwiper = new Swiper('.hero-swiper', {
-        loop: true,
+        const heroSwiper = new Swiper('.hero-swiper', {
+            loop: true,
 
-        effect: 'fade',
-        fadeEffect: {
-            crossFade: true
-        },
-
-        speed: 1000,
-
-        // Autoplay configurado para parar quando há interação manual
-        autoplay: {
-            delay: 5000,
-            disableOnInteraction: true, // Para quando clicas nos botões
-            pauseOnMouseEnter: false,
-        },
-
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-        },
-
-        navigation: {
-            nextEl: '.swiper-button-next-custom',
-            prevEl: '.swiper-button-prev-custom',
-        },
-
-        // Desabilitar navegação por arrastar/swipe para permitir seleção de texto
-        simulateTouch: false,
-        allowTouchMove: false,
-
-        // Controlos de teclado removidos para evitar conflitos
-
-        on: {
-            init: function () {
-                animateSlideContent(this.slides[this.activeIndex]);
+            effect: 'fade',
+            fadeEffect: {
+                crossFade: true
             },
-            slideChange: function () {
-                animateSlideContent(this.slides[this.activeIndex]);
+
+            speed: 1000,
+
+            // Autoplay configurado para parar quando há interação manual
+            autoplay: {
+                delay: 5000,
+                disableOnInteraction: true, // Para quando clicas nos botões
+                pauseOnMouseEnter: false,
             },
-            // Reinicia o autoplay após interação manual
-            slideChangeTransitionEnd: function () {
-                if (this.autoplay && !this.autoplay.running) {
-                    this.autoplay.start();
+
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+
+            navigation: {
+                nextEl: '.swiper-button-next-custom',
+                prevEl: '.swiper-button-prev-custom',
+            },
+
+            // Desabilitar navegação por arrastar/swipe para permitir seleção de texto
+            simulateTouch: false,
+            allowTouchMove: false,
+
+            // Controlos de teclado removidos para evitar conflitos
+
+            on: {
+                init: function () {
+                    animateSlideContent(this.slides[this.activeIndex]);
+                },
+                slideChange: function () {
+                    animateSlideContent(this.slides[this.activeIndex]);
+                },
+                // Reinicia o autoplay após interação manual
+                slideChangeTransitionEnd: function () {
+                    if (this.autoplay && !this.autoplay.running) {
+                        this.autoplay.start();
+                    }
                 }
             }
-        }
-    });
+        });
+    } catch (error) {
+        // Swiper initialization failed silently - no console errors
+        // This prevents errors on pages without hero swiper
+        return;
+    }
 }
 
 // =================================
 // Helper: Animar Texto do Slide
 // =================================
 function animateSlideContent(slide) {
-    if (!slide) return;
+    try {
+        if (!slide) return;
 
-    // Procura todos os elementos com a classe de animação no slide atual
-    const animatedElements = slide.querySelectorAll('.animate-fade-in-up');
+        // Procura todos os elementos com a classe de animação no slide atual
+        const animatedElements = slide.querySelectorAll('.animate-fade-in-up');
 
-    animatedElements.forEach(el => {
-        // Truque para reiniciar animação CSS:
-        // 1. Remove a animação
-        el.style.animation = 'none';
-        // 2. Força o navegador a recalcular o layout (Reflow)
-        el.offsetHeight;
-        // 3. Limpa a propriedade para que o CSS original (animation) volte a funcionar
-        el.style.animation = '';
-    });
+        animatedElements.forEach(el => {
+            // Truque para reiniciar animação CSS:
+            // 1. Remove a animação
+            el.style.animation = 'none';
+            // 2. Força o navegador a recalcular o layout (Reflow)
+            el.offsetHeight;
+            // 3. Limpa a propriedade para que o CSS original (animation) volte a funcionar
+            el.style.animation = '';
+        });
+    } catch (error) {
+        // Animation failed silently
+        return;
+    }
 }
 
 // Executar quando o DOM estiver pronto
@@ -349,6 +370,9 @@ function initLightbox() {
             lightboxImg.alt = img.alt;
             lightbox.classList.add('active');
             document.body.style.overflow = 'hidden';
+            document.body.style.position = 'fixed';
+            document.body.style.width = '100%';
+            document.documentElement.style.overflow = 'hidden';
         });
     });
 
@@ -356,6 +380,9 @@ function initLightbox() {
     const closeLightbox = () => {
         lightbox.classList.remove('active');
         document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+        document.documentElement.style.overflow = '';
     };
 
     closeBtn.addEventListener('click', closeLightbox);

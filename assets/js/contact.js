@@ -24,7 +24,7 @@ const EMAILJS_CONFIG = {
 
 // FormSubmit Configuration (https://formsubmit.co/)
 // Just use your email address - no registration needed!
-const FORMSUBMIT_EMAIL = 'info@gtmovel.pt';
+const FORMSUBMIT_EMAIL = 'gtmovel@live.com.pt';
 
 // Custom API Endpoint (if you have your own backend)
 const CUSTOM_ENDPOINT = '/api/contact';

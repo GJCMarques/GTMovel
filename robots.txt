@@ -1,0 +1,50 @@
+# robots.txt para GT Móvel
+# https://www.gtmovel.com/robots.txt
+
+# Permitir todos os bots de motores de busca
+User-agent: *
+Allow: /
+
+# Bloquear acesso a arquivos temporários e de sistema
+Disallow: /assets/
+Disallow: /.git/
+Disallow: /.vscode/
+Disallow: /.github/
+Disallow: /node_modules/
+Disallow: /*.json$
+Disallow: /*.md$
+
+# Permitir especificamente CSS, JS e imagens importantes
+Allow: /assets/css/
+Allow: /assets/js/
+Allow: /assets/img/
+Allow: /assets/images/
+
+# Google Bot específico
+User-agent: Googlebot
+Allow: /
+Allow: /assets/css/
+Allow: /assets/js/
+Allow: /assets/img/
+Allow: /assets/images/
+
+# Google Image Bot
+User-agent: Googlebot-Image
+Allow: /
+Allow: /assets/img/
+Allow: /assets/images/
+
+# Bing Bot
+User-agent: Bingbot
+Allow: /
+Allow: /assets/css/
+Allow: /assets/js/
+Allow: /assets/img/
+Allow: /assets/images/
+
+# Sitemap
+Sitemap: https://www.gtmovel.com/sitemap.xml
+
+# Crawl-delay (opcional - tempo em segundos entre requisições)
+# Comentado por padrão para não atrasar indexação
+# Crawl-delay: 10
