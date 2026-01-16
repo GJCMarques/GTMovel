@@ -662,7 +662,7 @@
 
                         if (response.ok && result.success) {
                             // Success
-                            showToast('✅ Pedido de orçamento enviado com sucesso! Entraremos em contacto em breve.', 'success');
+                            showToast('Pedido de orçamento enviado com sucesso! Entraremos em contacto em breve.', 'success');
                             form.reset();
                         } else {
                             // Error from server
@@ -670,7 +670,7 @@
                         }
                     } catch (error) {
                         console.error('Erro ao enviar formulário:', error);
-                        showToast('❌ Erro ao enviar pedido de orçamento. Por favor, tente novamente ou contacte-nos diretamente: gtmovel@live.com.pt', 'error');
+                        showToast('Erro ao enviar pedido de orçamento. Por favor, tente novamente ou contacte-nos diretamente: gtmovel@live.com.pt', 'error');
                     } finally {
                         // Reset button state
                         submitBtn.disabled = false;
